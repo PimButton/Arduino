@@ -324,6 +324,15 @@ bool ESP8266WiFiSTAClass::isConnected() {
  * @return if saved
  */
 bool ESP8266WiFiSTAClass::setAutoConnect(bool autoConnect) {
+
+
+    //set WiFi Country settings
+
+    wifi_country_t wc = {.cc="USA", .schan=1, .nchan=11, .policy=WIFI_COUNTRY_POLICY_MANUAL};
+    wifi_set_country(&wc);
+
+    system_phy_set_max_tpw(70); //limit max output power. Range: [0, 82]
+    
     bool ret;
     ETS_UART_INTR_DISABLE();
     ret = wifi_station_set_auto_connect(autoConnect);
