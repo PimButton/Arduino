@@ -161,6 +161,12 @@ extern "C" void user_init(void) {
 
     uart_div_modify(0, UART_CLK_FREQ / (115200));
 
+    //set WiFi Country settings
+    wifi_country_t wc = {.cc="USA", .schan=1, .nchan=11, .policy=WIFI_COUNTRY_POLICY_MANUAL};
+    wifi_set_country(&wc);
+
+    system_phy_set_max_tpw(70); //limit max output power. Range: [0, 82]
+
     init();
 
     initVariant();
