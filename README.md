@@ -40,7 +40,7 @@ Documentation: [http://esp8266.github.io/Arduino/versions/2.3.0/](http://esp8266
 cd hardware
 mkdir esp8266com
 cd esp8266com
-git clone https://github.com/esp8266/Arduino.git esp8266
+git clone https://github.com/PimButton/Arduino.git esp8266
 ```
 - Download binary tools (you need Python 2.7)
 ```bash
