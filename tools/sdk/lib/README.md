@@ -1,27 +1,59 @@
-## Updating SDK libraries
+# About libc.a and libgcc.a
 
-After updating SDK libraries to a new version, do the following changes.
+In order to reduce the size of **.text**, we remove the functions which already in rom code.
 
+The removed functions in libgcc.a:
 
-Remove mem_manager.o from libmain.a to use custom heap implementation, and time.o to fix redefinition of time-related functions:
-
-```bash
-xtensa-lx106-elf-ar -d libmain.a mem_manager.o
-xtensa-lx106-elf-ar -d libmain.a time.o
+```
+__addsubdf3
+__addsubsf3
+__divdf3
+__divdi3
+__divsi3
+__extendsfdf2
+__fixdfsi
+__fixunsdfsi
+__fixunssfsi
+__floatsidf
+__floatsisf
+__floatunsidf
+__floatunsisf
+__muldf3
+__muldi3
+__mulsf3
+__truncdfsf2
+__udivdi3
+__udivsi3
+__umoddi3
+__umodsi3
+__umulsidi3
 ```
 
-## Updating libstdc++
+The removed functions in libc.a:
 
-After building gcc using crosstool-NG, get compiled libstdc++ and remove some objects:
-
-```bash
-xtensa-lx106-elf-ar d libstdc++.a pure.o
-xtensa-lx106-elf-ar d libstdc++.a vterminate.o
-xtensa-lx106-elf-ar d libstdc++.a guard.o
-xtensa-lx106-elf-ar d libstdc++.a functexcept.o
-xtensa-lx106-elf-ar d libstdc++.a del_op.o
-xtensa-lx106-elf-ar d libstdc++.a del_opv.o
-xtensa-lx106-elf-ar d libstdc++.a new_op.o
-xtensa-lx106-elf-ar d libstdc++.a new_opv.o
+```
+bzero
+memcmp
+memcpy
+memmove
+memset
+strcmp
+strcpy
+strlen
+strncmp
+strncpy
+strstr
 ```
 
+## How to remove the functions in those two lib.
+
+The libc.a in SDK is compiled from newlib v2.0.0, libgcc.a is compiled from gcc v4.8.5.
+If you use other version gcc and newlib, you can follow those commands to strip the functions.
+
+```
+cp $(TOOLCHAIN)/lib/gcc/xtensa-lx106-elf/<version>/libgcc.a .
+xtensa-lx106-elf-ar -M < strip_libgcc_funcs.txt
+
+cp $(TOOLCHAIN)/xtensa-lx106-elf/lib/libc.a .
+xtensa-lx106-elf-ar -M < strip_libc_funcs.txt
+```
